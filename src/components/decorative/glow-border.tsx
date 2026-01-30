@@ -25,7 +25,7 @@ export const GlowBorder = forwardRef<HTMLDivElement, GlowBorderProps>(
     {
       children,
       className,
-      glowColor = "var(--burgundy)",
+      glowColor = "var(--accent)",
       glowIntensity = "normal",
       borderWidth = 1,
       borderRadius = 12,

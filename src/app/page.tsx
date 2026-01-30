@@ -30,7 +30,7 @@ const initialSlide: SlideContent = {
   type: "hook",
   headline: "Your Newsletter Title",
   subheadline: "Transform it into engaging carousel slides",
-  gradient: "burgundy",
+  gradient: "accent",
   animation: "emerge",
   order: 0,
 };
@@ -93,21 +93,21 @@ export default function Home() {
     <main className="min-h-screen bg-black relative overflow-hidden">
       {/* Background decorations */}
       <DotGrid pattern="fade-edges" opacity={0.15} />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-burgundy/30 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-burgundy/30 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
       {/* Header */}
-      <header className="relative z-10 border-b border-burgundy/10">
+      <header className="relative z-10 border-b border-accent/10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <GlowBorder
-                glowColor="var(--burgundy)"
+                glowColor="var(--accent)"
                 glowIntensity="subtle"
                 borderRadius={8}
               >
                 <div className="p-2">
-                  <Zap className="w-6 h-6 text-burgundy" />
+                  <Zap className="w-6 h-6 text-accent" />
                 </div>
               </GlowBorder>
               <div>
@@ -124,7 +124,7 @@ export default function Home() {
                 className={cn(
                   "p-2 rounded-lg transition-colors",
                   showSettings
-                    ? "bg-burgundy/20 text-burgundy"
+                    ? "bg-accent/20 text-accent"
                     : "hover:bg-carbon-800 text-carbon-400"
                 )}
               >
@@ -203,7 +203,7 @@ export default function Home() {
                 </div>
                 <button
                   onClick={handleAddSlide}
-                  className="p-1 rounded hover:bg-carbon-800 transition-colors text-burgundy"
+                  className="p-1 rounded hover:bg-carbon-800 transition-colors text-accent"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -216,7 +216,7 @@ export default function Home() {
                     className={cn(
                       "flex-shrink-0 w-24 cursor-pointer rounded-lg overflow-hidden border-2 transition-all",
                       index === activeSlideIndex
-                        ? "border-burgundy"
+                        ? "border-accent"
                         : "border-transparent hover:border-carbon-600"
                     )}
                     onClick={() => setActiveSlideIndex(index)}
@@ -244,7 +244,7 @@ export default function Home() {
                 className={cn(
                   "flex-1 py-2 rounded-lg text-label transition-colors",
                   showParser
-                    ? "bg-burgundy text-white"
+                    ? "bg-accent text-black"
                     : "bg-carbon-800 text-white-muted hover:bg-carbon-700"
                 )}
               >
@@ -255,7 +255,7 @@ export default function Home() {
                 className={cn(
                   "flex-1 py-2 rounded-lg text-label transition-colors",
                   !showParser
-                    ? "bg-burgundy text-white"
+                    ? "bg-accent text-black"
                     : "bg-carbon-800 text-white-muted hover:bg-carbon-700"
                 )}
               >
@@ -320,7 +320,7 @@ export default function Home() {
                             className={cn(
                               "flex-1 py-2 rounded-lg text-label transition-colors",
                               settings.aspectRatio === ratio
-                                ? "bg-burgundy text-white"
+                                ? "bg-accent text-black"
                                 : "bg-carbon-800 text-white-muted hover:bg-carbon-700"
                             )}
                           >
@@ -354,7 +354,7 @@ export default function Home() {
                             className={cn(
                               "w-12 h-6 rounded-full transition-colors relative",
                               settings[key as keyof CarouselSettings]
-                                ? "bg-burgundy"
+                                ? "bg-accent"
                                 : "bg-carbon-700"
                             )}
                           >
@@ -383,7 +383,7 @@ export default function Home() {
                           setSettings({ ...settings, brandName: e.target.value })
                         }
                         placeholder="Your brand"
-                        className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy"
+                        className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     </div>
                   </div>

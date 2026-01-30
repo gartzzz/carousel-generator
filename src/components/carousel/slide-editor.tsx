@@ -22,9 +22,9 @@ interface SlideEditorProps {
 
 const gradientOptions: { value: GradientStyle; label: string }[] = [
   { value: "noir", label: "Noir" },
-  { value: "burgundy", label: "Burgundy" },
-  { value: "mesh", label: "Mesh" },
   { value: "accent", label: "Accent" },
+  { value: "mesh", label: "Mesh" },
+  { value: "subtle", label: "Subtle" },
   { value: "custom", label: "Custom" },
 ];
 
@@ -104,7 +104,7 @@ export function SlideEditor({
         <select
           value={slide.type}
           onChange={(e) => handleChange("type", e.target.value)}
-          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent focus:outline-none focus:ring-1 focus:ring-burgundy"
+          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent focus:outline-none focus:ring-1 focus:ring-accent"
         >
           {slideTypeOptions.map((type) => (
             <option key={type} value={type} className="bg-carbon-900">
@@ -122,7 +122,7 @@ export function SlideEditor({
           value={slide.headline}
           onChange={(e) => handleChange("headline", e.target.value)}
           placeholder="Enter a powerful headline..."
-          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy"
+          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent"
         />
       </div>
 
@@ -134,7 +134,7 @@ export function SlideEditor({
           value={slide.subheadline || ""}
           onChange={(e) => handleChange("subheadline", e.target.value)}
           placeholder="Supporting text..."
-          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy"
+          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent"
         />
       </div>
 
@@ -146,7 +146,7 @@ export function SlideEditor({
           onChange={(e) => handleChange("body", e.target.value)}
           placeholder="Additional content..."
           rows={3}
-          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy resize-none"
+          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent resize-none"
         />
       </div>
 
@@ -173,7 +173,7 @@ export function SlideEditor({
               onChange={(e) => setNewBulletPoint(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addBulletPoint()}
               placeholder="Add bullet point..."
-              className="flex-1 spark-glass-inset rounded-lg px-4 py-2 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy"
+              className="flex-1 spark-glass-inset rounded-lg px-4 py-2 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent"
             />
             <button
               onClick={addBulletPoint}
@@ -193,7 +193,7 @@ export function SlideEditor({
           value={slide.ctaText || ""}
           onChange={(e) => handleChange("ctaText", e.target.value)}
           placeholder="Learn More, Get Started, etc."
-          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy"
+          className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent"
         />
       </div>
 
@@ -205,7 +205,7 @@ export function SlideEditor({
           <select
             value={slide.gradient}
             onChange={(e) => handleChange("gradient", e.target.value)}
-            className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent focus:outline-none focus:ring-1 focus:ring-burgundy"
+            className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent focus:outline-none focus:ring-1 focus:ring-accent"
           >
             {gradientOptions.map((option) => (
               <option key={option.value} value={option.value} className="bg-carbon-900">
@@ -219,12 +219,12 @@ export function SlideEditor({
         <div className="space-y-2">
           <label className="text-label text-white-muted flex items-center gap-2">
             Animation
-            <Sparkles className="w-3 h-3 text-burgundy" />
+            <Sparkles className="w-3 h-3 text-accent" />
           </label>
           <select
             value={slide.animation}
             onChange={(e) => handleChange("animation", e.target.value)}
-            className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent focus:outline-none focus:ring-1 focus:ring-burgundy"
+            className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white bg-transparent focus:outline-none focus:ring-1 focus:ring-accent"
           >
             {animationOptions.map((option) => (
               <option key={option.value} value={option.value} className="bg-carbon-900">
@@ -244,7 +244,7 @@ export function SlideEditor({
             value={slide.customGradient || ""}
             onChange={(e) => handleChange("customGradient", e.target.value)}
             placeholder="linear-gradient(135deg, #000 0%, #333 100%)"
-            className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white font-mono text-sm bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy"
+            className="w-full spark-glass-inset rounded-lg px-4 py-3 text-white font-mono text-sm bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent"
           />
         </div>
       )}

@@ -17,9 +17,9 @@ interface SlidePreviewProps {
 
 const gradientClasses: Record<string, string> = {
   noir: "gradient-noir",
-  burgundy: "gradient-burgundy",
-  mesh: "gradient-mesh",
   accent: "gradient-accent",
+  mesh: "gradient-mesh",
+  subtle: "gradient-subtle",
 };
 
 const animationVariants = {
@@ -67,7 +67,7 @@ export function SlidePreview({
       className={cn(
         "relative cursor-pointer overflow-hidden rounded-xl transition-all",
         aspectRatioClass,
-        isActive && "ring-2 ring-burgundy ring-offset-2 ring-offset-black"
+        isActive && "ring-2 ring-accent ring-offset-2 ring-offset-black"
       )}
       style={{ width: `${100 * scale}%`, minWidth: 200 }}
       onClick={onClick}
@@ -137,7 +137,7 @@ export function SlidePreview({
         <div className="flex-1 flex flex-col justify-center items-center text-center px-4">
           {slide.headline && (
             <GlowBorder
-              glowColor="var(--burgundy)"
+              glowColor="var(--accent)"
               glowIntensity={settings.showGlowEffects ? "subtle" : "subtle"}
               borderWidth={0}
               animated={settings.showGlowEffects}
@@ -189,7 +189,7 @@ export function SlidePreview({
                 className={cn(
                   "w-2 h-2 rounded-full transition-all",
                   index + 1 === slideNumber
-                    ? "bg-burgundy w-6"
+                    ? "bg-accent w-6"
                     : "bg-carbon-600"
                 )}
               />

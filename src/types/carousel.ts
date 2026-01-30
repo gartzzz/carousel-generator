@@ -9,9 +9,9 @@ export type SlideType =
 
 export type GradientStyle =
   | "noir"
-  | "burgundy"
-  | "mesh"
   | "accent"
+  | "mesh"
+  | "subtle"
   | "custom";
 
 export type AnimationStyle =

@@ -84,7 +84,7 @@ export const EnergyWire = forwardRef<SVGSVGElement, EnergyWireProps>(
       pathType = "straight",
       customPath,
       curveIntensity = 0.3,
-      beamColor = "var(--burgundy)",
+      beamColor = "var(--accent)",
       wireColor = "var(--carbon-600)",
       glowIntensity = "medium",
       wireWidth = 1.5,

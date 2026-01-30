@@ -2,17 +2,27 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Wand2, Loader2, FileText } from "lucide-react";
-import type { SlideContent, SlideType, GradientStyle } from "@/types/carousel";
+import { Wand2, Loader2, FileText, Sparkles, Cpu } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { SlideContent, SlideType } from "@/types/carousel";
 
 interface NewsletterParserProps {
   onSlidesGenerated: (slides: SlideContent[]) => void;
 }
 
+interface AISlide {
+  type: string;
+  headline: string;
+  subheadline?: string;
+  body?: string;
+  bulletPoints?: string[];
+  ctaText?: string;
+}
+
 const slideTemplates: Record<SlideType, Partial<SlideContent>> = {
   hook: {
     type: "hook",
-    gradient: "burgundy",
+    gradient: "accent",
     animation: "emerge",
   },
   problem: {
@@ -37,7 +47,7 @@ const slideTemplates: Record<SlideType, Partial<SlideContent>> = {
   },
   cta: {
     type: "cta",
-    gradient: "burgundy",
+    gradient: "accent",
     animation: "materialize",
   },
   content: {
@@ -49,6 +59,24 @@ const slideTemplates: Record<SlideType, Partial<SlideContent>> = {
 
 function generateId() {
   return Math.random().toString(36).substring(2, 9);
+}
+
+function transformAISlides(aiSlides: AISlide[]): SlideContent[] {
+  return aiSlides.map((aiSlide, index) => {
+    const slideType = (aiSlide.type as SlideType) || "content";
+    const template = slideTemplates[slideType] || slideTemplates.content;
+
+    return {
+      id: generateId(),
+      ...template,
+      headline: aiSlide.headline || "Slide",
+      subheadline: aiSlide.subheadline,
+      body: aiSlide.body,
+      bulletPoints: aiSlide.bulletPoints,
+      ctaText: aiSlide.ctaText,
+      order: index,
+    } as SlideContent;
+  });
 }
 
 function parseNewsletterContent(content: string): SlideContent[] {
@@ -117,15 +145,39 @@ function parseNewsletterContent(content: string): SlideContent[] {
 export function NewsletterParser({ onSlidesGenerated }: NewsletterParserProps) {
   const [content, setContent] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [useAI, setUseAI] = useState(true);
+  const [parsingMethod, setParsingMethod] = useState<"ai" | "rules" | null>(null);
 
   const handleParse = async () => {
     if (!content.trim()) return;
 
     setIsProcessing(true);
+    setParsingMethod(null);
 
-    // Simulate processing delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    if (useAI) {
+      try {
+        const response = await fetch("/api/parse-newsletter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content }),
+        });
 
+        const data = await response.json();
+
+        if (!data.fallback && data.slides && data.slides.length > 0) {
+          const slides = transformAISlides(data.slides);
+          setParsingMethod("ai");
+          onSlidesGenerated(slides);
+          setIsProcessing(false);
+          return;
+        }
+      } catch (error) {
+        console.error("AI parsing failed:", error);
+      }
+    }
+
+    // Fallback to rule-based parsing
+    setParsingMethod("rules");
     const slides = parseNewsletterContent(content);
     onSlidesGenerated(slides);
     setIsProcessing(false);
@@ -134,16 +186,36 @@ export function NewsletterParser({ onSlidesGenerated }: NewsletterParserProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-burgundy/10 border border-burgundy/20">
-          <FileText className="w-5 h-5 text-burgundy" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-accent/10 border border-accent/20">
+            <FileText className="w-5 h-5 text-accent" />
+          </div>
+          <div>
+            <h3 className="text-h4 text-white">Paste Your Newsletter</h3>
+            <p className="text-small text-white-muted">
+              {useAI ? "AI will intelligently" : "Rules will"} fragment it into slides
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-h4 text-white">Paste Your Newsletter</h3>
-          <p className="text-small text-white-muted">
-            AI will automatically fragment it into conversion-optimized slides
-          </p>
-        </div>
+
+        {/* AI Toggle */}
+        <button
+          onClick={() => setUseAI(!useAI)}
+          className={cn(
+            "flex items-center gap-2 px-3 py-1.5 rounded-lg text-label transition-colors",
+            useAI
+              ? "bg-accent/20 text-accent border border-accent/30"
+              : "bg-carbon-800 text-carbon-400 border border-carbon-700"
+          )}
+        >
+          {useAI ? (
+            <Sparkles className="w-4 h-4" />
+          ) : (
+            <Cpu className="w-4 h-4" />
+          )}
+          {useAI ? "AI Mode" : "Rules Mode"}
+        </button>
       </div>
 
       {/* Text Area */}
@@ -165,7 +237,7 @@ Start with just 2 hours of focused work each morning. No emails. No meetings. Ju
 
 Ready to transform your productivity? Download my free time-blocking template.`}
         rows={12}
-        className="w-full spark-glass-inset rounded-xl px-6 py-4 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-burgundy resize-none text-body"
+        className="w-full spark-glass-inset rounded-xl px-6 py-4 text-white bg-transparent placeholder:text-carbon-500 focus:outline-none focus:ring-1 focus:ring-accent resize-none text-body"
       />
 
       {/* Generate Button */}
@@ -180,7 +252,7 @@ Ready to transform your productivity? Download my free time-blocking template.`}
           {isProcessing ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Processing...</span>
+              <span>{useAI ? "AI Processing..." : "Processing..."}</span>
             </>
           ) : (
             <>
@@ -191,9 +263,35 @@ Ready to transform your productivity? Download my free time-blocking template.`}
         </div>
       </motion.button>
 
+      {/* Parsing Method Indicator */}
+      {parsingMethod && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 rounded-lg text-small",
+            parsingMethod === "ai"
+              ? "bg-accent/10 text-accent"
+              : "bg-carbon-800 text-carbon-400"
+          )}
+        >
+          {parsingMethod === "ai" ? (
+            <>
+              <Sparkles className="w-4 h-4" />
+              <span>Parsed with AI</span>
+            </>
+          ) : (
+            <>
+              <Cpu className="w-4 h-4" />
+              <span>Parsed with rules (AI unavailable)</span>
+            </>
+          )}
+        </motion.div>
+      )}
+
       {/* Tips */}
       <div className="spark-glass-inset rounded-lg p-4">
-        <p className="text-label text-burgundy mb-2">Tips for best results:</p>
+        <p className="text-label text-accent mb-2">Tips for best results:</p>
         <ul className="space-y-1 text-small text-white-muted">
           <li>- Start with a hook or headline</li>
           <li>- Include clear problems and solutions</li>

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Wand2, Loader2, FileText, Sparkles, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SlideContent, SlideType } from "@/types/carousel";
+import { MAX_SLIDES } from "@/types/carousel";
 
 interface NewsletterParserProps {
   onSlidesGenerated: (slides: SlideContent[]) => void;
@@ -22,37 +23,37 @@ interface AISlide {
 const slideTemplates: Record<SlideType, Partial<SlideContent>> = {
   hook: {
     type: "hook",
-    gradient: "accent",
+    gradient: "breathing",
     animation: "emerge",
   },
   problem: {
     type: "problem",
-    gradient: "noir",
+    gradient: "breathing",
     animation: "slide-up",
   },
   solution: {
     type: "solution",
-    gradient: "accent",
+    gradient: "breathing",
     animation: "materialize",
   },
   benefit: {
     type: "benefit",
-    gradient: "mesh",
+    gradient: "breathing",
     animation: "slide-in",
   },
   "social-proof": {
     type: "social-proof",
-    gradient: "noir",
+    gradient: "breathing",
     animation: "emerge",
   },
   cta: {
     type: "cta",
-    gradient: "accent",
+    gradient: "breathing",
     animation: "materialize",
   },
   content: {
     type: "content",
-    gradient: "noir",
+    gradient: "breathing",
     animation: "slide-up",
   },
 };
@@ -62,7 +63,7 @@ function generateId() {
 }
 
 function transformAISlides(aiSlides: AISlide[]): SlideContent[] {
-  return aiSlides.map((aiSlide, index) => {
+  return aiSlides.slice(0, MAX_SLIDES).map((aiSlide, index) => {
     const slideType = (aiSlide.type as SlideType) || "content";
     const template = slideTemplates[slideType] || slideTemplates.content;
 
@@ -139,7 +140,7 @@ function parseNewsletterContent(content: string): SlideContent[] {
     } as SlideContent);
   }
 
-  return slides;
+  return slides.slice(0, MAX_SLIDES);
 }
 
 export function NewsletterParser({ onSlidesGenerated }: NewsletterParserProps) {

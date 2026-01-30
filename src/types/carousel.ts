@@ -1,3 +1,5 @@
+export const MAX_SLIDES = 20;
+
 export type SlideType =
   | "hook"
   | "problem"
@@ -7,12 +9,8 @@ export type SlideType =
   | "cta"
   | "content";
 
-export type GradientStyle =
-  | "noir"
-  | "accent"
-  | "mesh"
-  | "subtle"
-  | "custom";
+// Simplified: all slides use breathing gradient by default
+export type GradientStyle = "breathing" | "custom";
 
 export type AnimationStyle =
   | "emerge"

@@ -19,7 +19,7 @@ import {
   NewsletterParser,
 } from "@/components/carousel";
 import type { SlideContent, CarouselSettings } from "@/types/carousel";
-import { defaultCarouselSettings } from "@/types/carousel";
+import { defaultCarouselSettings, MAX_SLIDES } from "@/types/carousel";
 
 function generateId() {
   return Math.random().toString(36).substring(2, 9);
@@ -30,7 +30,7 @@ const initialSlide: SlideContent = {
   type: "hook",
   headline: "Your Newsletter Title",
   subheadline: "Transform it into engaging carousel slides",
-  gradient: "accent",
+  gradient: "breathing",
   animation: "emerge",
   order: 0,
 };
@@ -63,11 +63,12 @@ export default function Home() {
   };
 
   const handleAddSlide = () => {
+    if (slides.length >= MAX_SLIDES) return;
     const newSlide: SlideContent = {
       id: generateId(),
       type: "content",
       headline: "New Slide",
-      gradient: "noir",
+      gradient: "breathing",
       animation: "slide-up",
       order: slides.length,
     };
@@ -76,7 +77,7 @@ export default function Home() {
   };
 
   const handleSlidesGenerated = (newSlides: SlideContent[]) => {
-    setSlides(newSlides);
+    setSlides(newSlides.slice(0, MAX_SLIDES));
     setActiveSlideIndex(0);
     setShowParser(false);
   };
@@ -199,11 +200,19 @@ export default function Home() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Layers className="w-4 h-4 text-white-muted" />
-                  <span className="text-label text-white-muted">Slides</span>
+                  <span className="text-label text-white-muted">
+                    Slides ({slides.length}/{MAX_SLIDES})
+                  </span>
                 </div>
                 <button
                   onClick={handleAddSlide}
-                  className="p-1 rounded hover:bg-carbon-800 transition-colors text-accent"
+                  disabled={slides.length >= MAX_SLIDES}
+                  className={cn(
+                    "p-1 rounded transition-colors",
+                    slides.length >= MAX_SLIDES
+                      ? "text-carbon-600 cursor-not-allowed"
+                      : "hover:bg-carbon-800 text-accent"
+                  )}
                 >
                   <Plus className="w-4 h-4" />
                 </button>

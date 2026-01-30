@@ -4,7 +4,7 @@ const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 const SYSTEM_PROMPT = `You are an expert at converting newsletter content into engaging carousel slides for social media.
 
-Your task is to analyze the newsletter text and break it into 4-7 slides optimized for conversion.
+Your task is to analyze the newsletter text and break it into 4-7 slides optimized for conversion (maximum 20 slides allowed).
 
 Rules:
 1. NEVER modify or rewrite the original copy - use the exact words from the newsletter
@@ -119,7 +119,9 @@ export async function POST(request: Request) {
         );
       }
 
-      return NextResponse.json({ slides: parsed.slides, fallback: false });
+      // Enforce max 20 slides
+      const limitedSlides = parsed.slides.slice(0, 20);
+      return NextResponse.json({ slides: limitedSlides, fallback: false });
     } catch {
       console.error("Failed to parse AI response as JSON:", aiMessage);
       return NextResponse.json(

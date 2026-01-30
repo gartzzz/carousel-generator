@@ -21,10 +21,7 @@ interface SlideEditorProps {
 }
 
 const gradientOptions: { value: GradientStyle; label: string }[] = [
-  { value: "noir", label: "Noir" },
-  { value: "accent", label: "Accent" },
-  { value: "mesh", label: "Mesh" },
-  { value: "subtle", label: "Subtle" },
+  { value: "breathing", label: "Breathing" },
   { value: "custom", label: "Custom" },
 ];
 

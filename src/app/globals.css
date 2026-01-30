@@ -16,10 +16,17 @@
   --white: hsl(40, 20%, 95%);
   --white-muted: hsl(40, 15%, 55%);
 
+  /* === IVORY SCALE (Off-white protagonist) === */
+  --ivory-100: hsl(40, 25%, 98%);   /* Headlines hero - brightest */
+  --ivory-200: hsl(40, 20%, 95%);   /* Important text */
+  --ivory-300: hsl(40, 18%, 88%);   /* Subheadlines */
+  --ivory-400: hsl(40, 15%, 72%);   /* Body text */
+  --ivory-500: hsl(40, 12%, 55%);   /* Labels, muted */
+
   /* === OFF-WHITE ACCENT (Monochrome - Primary accent) === */
-  --accent: hsl(40, 20%, 95%);
-  --accent-dark: hsl(40, 15%, 55%);
-  --accent-bright: hsl(40, 25%, 98%);
+  --accent: var(--ivory-200);
+  --accent-dark: var(--ivory-500);
+  --accent-bright: var(--ivory-100);
   --accent-glow: hsla(40, 20%, 95%, 0.3);
   --accent-wire: hsla(40, 20%, 95%, 0.12);
 
@@ -95,6 +102,21 @@
   --slide-width: 1080px;
   --slide-height: 1350px;
   --slide-ratio: 4 / 5;
+
+  /* === SLIDE TYPOGRAPHY (más contenida) === */
+  --slide-headline: 1.75rem;      /* 28px */
+  --slide-subheadline: 1rem;      /* 16px */
+  --slide-body: 0.875rem;         /* 14px */
+  --slide-bullet: 0.8125rem;      /* 13px */
+  --slide-cta: 0.875rem;          /* 14px */
+
+  /* === RHYTHM SPACING === */
+  --rhythm-2: 6px;
+  --rhythm-3: 10px;
+  --rhythm-4: 16px;
+  --rhythm-5: 26px;
+  --rhythm-6: 42px;
+  --rhythm-7: 68px;
 }
 
 /* === TAILWIND v4 THEME === */
@@ -127,6 +149,12 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+
+  --color-ivory-100: var(--ivory-100);
+  --color-ivory-200: var(--ivory-200);
+  --color-ivory-300: var(--ivory-300);
+  --color-ivory-400: var(--ivory-400);
+  --color-ivory-500: var(--ivory-500);
 
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
@@ -189,6 +217,60 @@ body {
 
 .text-mono {
   font-family: var(--font-display);
+}
+
+/* === SLIDE TYPOGRAPHY CLASSES === */
+.slide-headline {
+  font-family: var(--font-display);
+  font-size: var(--slide-headline);
+  font-weight: 700;
+  line-height: 1em;
+  letter-spacing: 0.01em;
+  color: var(--ivory-100);
+}
+
+.slide-subheadline {
+  font-family: var(--font-display);
+  font-size: var(--slide-subheadline);
+  font-weight: 500;
+  line-height: 1em;
+  letter-spacing: 0;
+  color: var(--ivory-200);
+}
+
+.slide-body {
+  font-family: var(--font-body);
+  font-size: var(--slide-body);
+  font-weight: 400;
+  line-height: 1.2em;
+  letter-spacing: -0.005em;
+  color: var(--ivory-300);
+}
+
+.slide-bullet {
+  font-family: var(--font-body);
+  font-size: var(--slide-bullet);
+  font-weight: 400;
+  line-height: 1.2em;
+  letter-spacing: -0.005em;
+  color: var(--ivory-300);
+}
+
+.slide-cta {
+  font-family: var(--font-display);
+  font-size: var(--slide-cta);
+  font-weight: 700;
+  line-height: 1em;
+  letter-spacing: 0.02em;
+}
+
+.slide-label {
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1em;
+  letter-spacing: 0.02em;
+  color: var(--ivory-500);
 }
 
 /* === PREMIUM KEYFRAMES === */
@@ -303,6 +385,26 @@ body {
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+/* === BREATHING GRADIENT ANIMATION === */
+@keyframes gradient-breathe-organic {
+  0%, 100% {
+    opacity: 0.06;
+    transform: scale(1) translate(0%, 0%);
+  }
+  25% {
+    opacity: 0.12;
+    transform: scale(1.05) translate(2%, -1%);
+  }
+  50% {
+    opacity: 0.08;
+    transform: scale(1.08) translate(-1%, 2%);
+  }
+  75% {
+    opacity: 0.14;
+    transform: scale(1.03) translate(1%, 1%);
   }
 }
 
@@ -476,6 +578,44 @@ body {
     var(--black);
 }
 
+/* === BREATHING GRADIENT (Default for all slides) === */
+.gradient-breathing {
+  position: relative;
+  background: var(--black);
+  overflow: hidden;
+}
+
+.gradient-breathing::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    hsla(40, 25%, 98%, 0.12) 0%,
+    hsla(40, 20%, 95%, 0.06) 30%,
+    transparent 70%
+  );
+  animation: gradient-breathe-organic 8s ease-in-out infinite;
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+/* Secondary breathing layer for depth */
+.gradient-breathing::after {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(
+    ellipse 60% 80% at 70% 60%,
+    hsla(40, 20%, 95%, 0.08) 0%,
+    transparent 60%
+  );
+  animation: gradient-breathe-organic 12s ease-in-out infinite reverse;
+  animation-delay: -4s;
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
 /* === ENERGY WIRE BEAM === */
 .energy-wire-beam {
   animation: wire-beam-flow var(--wire-duration, 3000ms) linear infinite;
@@ -534,5 +674,12 @@ body {
   .spark-glass,
   .spark-glass-elevated {
     transition: none;
+  }
+
+  .gradient-breathing::before,
+  .gradient-breathing::after {
+    animation: none !important;
+    opacity: 0.08;
+    transform: none;
   }
 }

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { DotGrid, EnergyWire, GlowBorder } from "@/components/decorative";
+import { DotGrid, EnergyWire, CausticOverlay } from "@/components/decorative";
 import type { SlideContent, CarouselSettings } from "@/types/carousel";
 
 interface SlidePreviewProps {
@@ -14,13 +14,6 @@ interface SlidePreviewProps {
   scale?: number;
   onClick?: () => void;
 }
-
-const gradientClasses: Record<string, string> = {
-  noir: "gradient-noir",
-  accent: "gradient-accent",
-  mesh: "gradient-mesh",
-  subtle: "gradient-subtle",
-};
 
 const animationVariants = {
   emerge: {
@@ -67,16 +60,16 @@ export function SlidePreview({
       className={cn(
         "relative cursor-pointer overflow-hidden rounded-xl transition-all",
         aspectRatioClass,
-        isActive && "ring-2 ring-accent ring-offset-2 ring-offset-black"
+        isActive && "ring-2 ring-ivory-200 ring-offset-2 ring-offset-black"
       )}
       style={{ width: `${100 * scale}%`, minWidth: 200 }}
       onClick={onClick}
     >
-      {/* Background */}
+      {/* Background - Always breathing gradient */}
       <div
         className={cn(
           "absolute inset-0",
-          slide.gradient !== "custom" && gradientClasses[slide.gradient]
+          slide.gradient === "custom" ? "" : "gradient-breathing"
         )}
         style={
           slide.gradient === "custom" && slide.customGradient
@@ -85,9 +78,14 @@ export function SlidePreview({
         }
       />
 
+      {/* Caustic/Fresnel light effects */}
+      {settings.showGlowEffects && slide.gradient !== "custom" && (
+        <CausticOverlay intensity="subtle" speed="slow" />
+      )}
+
       {/* Decorative elements */}
       {settings.showDotGrid && (
-        <DotGrid pattern="fade-edges" opacity={0.3} />
+        <DotGrid pattern="fade-edges" opacity={0.2} />
       )}
 
       {settings.showEnergyWires && (
@@ -97,7 +95,8 @@ export function SlidePreview({
               width="100%"
               height={40}
               direction="horizontal"
-              pathType="straight"
+              pathType="curved"
+              curveIntensity={0.2}
               glowIntensity="low"
               beamCount={2}
               speed="slow"
@@ -108,7 +107,8 @@ export function SlidePreview({
               width="100%"
               height={40}
               direction="horizontal"
-              pathType="straight"
+              pathType="curved"
+              curveIntensity={0.2}
               glowIntensity="low"
               beamCount={2}
               speed="slow"
@@ -119,7 +119,8 @@ export function SlidePreview({
 
       {/* Content */}
       <motion.div
-        className="relative z-10 flex h-full flex-col justify-center p-8"
+        className="relative z-10 flex h-full flex-col justify-center"
+        style={{ padding: "var(--rhythm-6)" }}
         initial={variants.initial}
         animate={variants.animate}
         transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
@@ -127,31 +128,29 @@ export function SlidePreview({
         {/* Slide number */}
         {settings.showSlideNumbers && slideNumber && (
           <div className="absolute top-6 left-6">
-            <span className="text-label text-white-muted">
+            <span className="slide-label">
               {String(slideNumber).padStart(2, "0")}
             </span>
           </div>
         )}
 
-        {/* Main content */}
-        <div className="flex-1 flex flex-col justify-center items-center text-center px-4">
+        {/* Main content - centered with max-width constraint */}
+        <div
+          className="flex-1 flex flex-col justify-center items-center text-center"
+          style={{ maxWidth: "70%", margin: "0 auto" }}
+        >
           {slide.headline && (
-            <GlowBorder
-              glowColor="var(--accent)"
-              glowIntensity={settings.showGlowEffects ? "subtle" : "subtle"}
-              borderWidth={0}
-              animated={settings.showGlowEffects}
-            >
-              <h2 className="text-h2 text-white mb-4">{slide.headline}</h2>
-            </GlowBorder>
+            <h2 className="slide-headline mb-4">{slide.headline}</h2>
           )}
 
           {slide.subheadline && (
-            <p className="text-h4 text-white-muted mb-6">{slide.subheadline}</p>
+            <p className="slide-subheadline mb-6" style={{ color: "var(--ivory-200)" }}>
+              {slide.subheadline}
+            </p>
           )}
 
           {slide.body && (
-            <p className="text-body text-white-muted max-w-md">{slide.body}</p>
+            <p className="slide-body max-w-md">{slide.body}</p>
           )}
 
           {slide.bulletPoints && slide.bulletPoints.length > 0 && (
@@ -159,13 +158,13 @@ export function SlidePreview({
               {slide.bulletPoints.map((point, index) => (
                 <motion.li
                   key={index}
-                  className="flex items-start gap-3 text-body text-white"
+                  className="flex items-start gap-3 slide-bullet"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <span className="led-indicator led-indicator--on mt-2" />
-                  {point}
+                  <span className="led-indicator led-indicator--on mt-1.5 flex-shrink-0" />
+                  <span>{point}</span>
                 </motion.li>
               ))}
             </ul>
@@ -174,7 +173,7 @@ export function SlidePreview({
           {slide.ctaText && (
             <div className="mt-8">
               <div className="btn-cta-wrapper">
-                <button className="btn-cta px-8 py-3">{slide.ctaText}</button>
+                <button className="btn-cta slide-cta px-8 py-3">{slide.ctaText}</button>
               </div>
             </div>
           )}
@@ -187,10 +186,10 @@ export function SlidePreview({
               <div
                 key={index}
                 className={cn(
-                  "w-2 h-2 rounded-full transition-all",
+                  "h-1.5 rounded-full transition-all",
                   index + 1 === slideNumber
-                    ? "bg-accent w-6"
-                    : "bg-carbon-600"
+                    ? "bg-ivory-100 w-6"
+                    : "bg-carbon-700 w-1.5"
                 )}
               />
             ))}
@@ -201,8 +200,8 @@ export function SlidePreview({
         {settings.brandName && (
           <div className="absolute bottom-6 right-6">
             <span
-              className="text-label"
-              style={{ color: settings.brandColor || "var(--white-muted)" }}
+              className="slide-label"
+              style={{ color: settings.brandColor || "var(--ivory-500)" }}
             >
               {settings.brandName}
             </span>
